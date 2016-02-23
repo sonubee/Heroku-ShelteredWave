@@ -21,6 +21,8 @@ public class Main {
     staticFileLocation("/public");
 
     get("/hello", (req, res) -> "Hello World");
+	
+	get("client_token", (req, res) -> "598fsafnlk;asdjf;klawfoieuwrwe8f7u89wu7fg89sduafosdiofjoipas");
 
     get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
