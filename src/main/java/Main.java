@@ -91,43 +91,43 @@ public class Main {
               .done();
        
         	System.out.println("After transaction");
-        Result<Transaction> result = gateway.transaction().sale(request);
-        
-        System.out.println("1");
-        String status = "";
-        System.out.println("2");
-	
-		
-		
-        if (result.isSuccess() == true){
-        	System.out.println("Success ");
-        	Transaction transaction = result.getTarget();
-        	transaction.getStatus();
-        	System.out.println("Status: " + transaction.getStatus());
-        }
-        System.out.println("3");
-        if (result.isSuccess() == false)
-        {
+			Result<Transaction> result = gateway.transaction().sale(request);
 			
-        	System.out.println("Fail");
-            Transaction transaction = result.getTransaction();
-
-            transaction.getStatus();
-            // Transaction.Status.PROCESSOR_DECLINED
-
-            transaction.getProcessorResponseCode();
-            // e.g. "2001"
-
-            transaction.getProcessorResponseText();
-            // e.g. "Insufficient Funds"
-            System.out.println("Status: " + transaction.getStatus());
-            System.out.println("Response Code: " + transaction.getProcessorResponseCode());
-            System.out.println("Response Text: " + transaction.getProcessorResponseText());
+			System.out.println("1");
+			String status = "";
+			System.out.println("2");
+		
 			
-        }
+			
+			if (result.isSuccess() == true){
+				System.out.println("Success ");
+				Transaction transaction = result.getTarget();
+				transaction.getStatus();
+				System.out.println("Status: " + transaction.getStatus());
+			}
+			System.out.println("3");
+			if (result.isSuccess() == false)
+			{
+				
+				System.out.println("Fail");
+				Transaction transaction = result.getTransaction();
+/*
+				transaction.getStatus();
+				// Transaction.Status.PROCESSOR_DECLINED
 
-        System.out.println("4");
-			return result.isSuccess()+ "!222";
+				transaction.getProcessorResponseCode();
+				// e.g. "2001"
+
+				transaction.getProcessorResponseText();
+				// e.g. "Insufficient Funds"
+				System.out.println("Status: " + transaction.getStatus());
+				System.out.println("Response Code: " + transaction.getProcessorResponseCode());
+				System.out.println("Response Text: " + transaction.getProcessorResponseText());
+				*/
+			}
+
+			System.out.println("4");
+				return result.isSuccess()+ "!222";
    
         });
         
