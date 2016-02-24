@@ -112,6 +112,7 @@ public class Main {
         System.out.println("3");
         if (result.isSuccess() == false)
         {
+			/*
         	System.out.println("Fail");
             Transaction transaction = result.getTransaction();
 
@@ -126,6 +127,7 @@ public class Main {
             System.out.println("Status: " + transaction.getStatus());
             System.out.println("Response Code: " + transaction.getProcessorResponseCode());
             System.out.println("Response Text: " + transaction.getProcessorResponseText());
+			*/
         }
 
         System.out.println("4");
