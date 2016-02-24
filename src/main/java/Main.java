@@ -28,12 +28,12 @@ public class Main {
 	
 	public static String token;
     
-    private static BraintreeGateway gateway = new BraintreeGateway(
-            Environment.SANDBOX,
-            "use_your_merchant_id",
-            "use_your_public_key",
-            "use_your_private_key"
-        ); 
+ 	private static BraintreeGateway gateway = new BraintreeGateway(
+			  Environment.PRODUCTION,
+			  "69ppkf6h8fqh9cxb",
+			  "svp64bn3p56344yj",
+			  "fa458ae542e48d150ed2d456d28f16b7"
+			);
     
     public static String generateToken (){
 		token = "32323";
