@@ -13,6 +13,10 @@ import static spark.Spark.get;
 import java.util.Random;
 import com.braintreegateway.BraintreeGateway;
 import com.braintreegateway.Environment;
+import com.braintreegateway.Result;
+import com.braintreegateway.Transaction;
+import com.braintreegateway.TransactionRequest;
+import com.braintreegateway.ValidationErrors;
 
 import com.heroku.sdk.jdbc.DatabaseUrl;
 
@@ -39,22 +43,95 @@ public class Main {
     port(Integer.valueOf(System.getenv("PORT")));
     staticFileLocation("/public");
 
-    	get("/hello", (request, response) ->{
+   get("/hello", (request, response) ->{
         	return "Hello World: ";
         });
 		
 		//get("client_token", (req, res) -> "598fsafnlk;asdjf;klawfoieuwrwe8f7u89wu7fg89sduafosdiofjoipas");
+	
         
         get("/client_token", (request, response) ->{
         	return "eyJ2ZXJzaW9uIjoyLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiIzN2Y4Zjg2ZWFhMjQxZWNjZGQ4MTg4ODFkNWQ5ZTUyNzlmNTg4OGEyNmM5MGM1N2QzMDc2ZmQzNDIxY2YwZGNlfGNyZWF0ZWRfYXQ9MjAxNi0wMi0yMFQyMzoxNDowNC4zMDgyMzkxNzUrMDAwMFx1MDAyNm1lcmNoYW50X2lkPTM0OHBrOWNnZjNiZ3l3MmJcdTAwMjZwdWJsaWNfa2V5PTJuMjQ3ZHY4OWJxOXZtcHIiLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvMzQ4cGs5Y2dmM2JneXcyYi9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJjaGFsbGVuZ2VzIjpbXSwiZW52aXJvbm1lbnQiOiJzYW5kYm94IiwiY2xpZW50QXBpVXJsIjoiaHR0cHM6Ly9hcGkuc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbTo0NDMvbWVyY2hhbnRzLzM0OHBrOWNnZjNiZ3l3MmIvY2xpZW50X2FwaSIsImFzc2V0c1VybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXV0aFVybCI6Imh0dHBzOi8vYXV0aC52ZW5tby5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIiwiYW5hbHl0aWNzIjp7InVybCI6Imh0dHBzOi8vY2xpZW50LWFuYWx5dGljcy5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIn0sInRocmVlRFNlY3VyZUVuYWJsZWQiOnRydWUsInRocmVlRFNlY3VyZSI6eyJsb29rdXBVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvMzQ4cGs5Y2dmM2JneXcyYi90aHJlZV9kX3NlY3VyZS9sb29rdXAifSwicGF5cGFsRW5hYmxlZCI6dHJ1ZSwicGF5cGFsIjp7ImRpc3BsYXlOYW1lIjoiQWNtZSBXaWRnZXRzLCBMdGQuIChTYW5kYm94KSIsImNsaWVudElkIjpudWxsLCJwcml2YWN5VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3BwIiwidXNlckFncmVlbWVudFVybCI6Imh0dHA6Ly9leGFtcGxlLmNvbS90b3MiLCJiYXNlVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhc3NldHNVcmwiOiJodHRwczovL2NoZWNrb3V0LnBheXBhbC5jb20iLCJkaXJlY3RCYXNlVXJsIjpudWxsLCJhbGxvd0h0dHAiOnRydWUsImVudmlyb25tZW50Tm9OZXR3b3JrIjp0cnVlLCJlbnZpcm9ubWVudCI6Im9mZmxpbmUiLCJ1bnZldHRlZE1lcmNoYW50IjpmYWxzZSwiYnJhaW50cmVlQ2xpZW50SWQiOiJtYXN0ZXJjbGllbnQzIiwiYmlsbGluZ0FncmVlbWVudHNFbmFibGVkIjp0cnVlLCJtZXJjaGFudEFjY291bnRJZCI6ImFjbWV3aWRnZXRzbHRkc2FuZGJveCIsImN1cnJlbmN5SXNvQ29kZSI6IlVTRCJ9LCJjb2luYmFzZUVuYWJsZWQiOmZhbHNlLCJtZXJjaGFudElkIjoiMzQ4cGs5Y2dmM2JneXcyYiIsInZlbm1vIjoib2ZmIn0=";
+        	//return 1;
+        });
+        
+        get("/client_token_real", (request, response) ->{
+        	return "production_x75kb8hy_69ppkf6h8fqh9cxb";
         });
         
         get("/client_token_test", (request, response) ->{
+        	
+        	ClientTokenRequest clientTokenRequest = new ClientTokenRequest()
+            .customerId("27073348");
+        	
+        	String clientToken = gateway.clientToken().generate(clientTokenRequest);
+        	System.out.println("Client Token: " + clientToken);
+        	
         	Random r = new Random();
         	int i1 = r.nextInt(1000 - 100) + 100;
         	i++;
-        	return "Random Number: " + i1 + " & Request Number: " + i;
+        	
+        	//return "Random Number: " + i1 + " & Request Number: " + i;
+        	return clientToken;
         });
+        
+        post("/checkout2", (req, res) -> {
+        	String nonce = req.queryParams("payment_method_nonce");
+        	System.out.println("Nonce: " + nonce);
+        	return true;
+        });
+        
+        post("/checkout", (req, res) -> {
+        	
+        	String nonce = req.queryParams("payment_method_nonce");
+        	
+        	System.out.println("Nonce: " + nonce);
+        	
+        	TransactionRequest request = new TransactionRequest()
+            .amount(new BigDecimal("1.00"))
+            .paymentMethodNonce(nonce)
+            //.merchantAccountId("JobsME_marketplace")
+            .options()
+              .submitForSettlement(true)
+              .done();
+       
+        	System.out.println("After transaction");
+        Result<Transaction> result = gateway.transaction().sale(request);
+        
+   
+        String status = "";
+        
+        if (result.isSuccess() == true){
+        	System.out.println("Success ");
+        	Transaction transaction = result.getTarget();
+        	transaction.getStatus();
+        	System.out.println("Status: " + transaction.getStatus());
+        }
+        
+        if (result.isSuccess() == false)
+        {
+        	System.out.println("Fail");
+            Transaction transaction = result.getTransaction();
+
+            transaction.getStatus();
+            // Transaction.Status.PROCESSOR_DECLINED
+
+            transaction.getProcessorResponseCode();
+            // e.g. "2001"
+
+            transaction.getProcessorResponseText();
+            // e.g. "Insufficient Funds"
+            System.out.println("Status: " + transaction.getStatus());
+            System.out.println("Response Code: " + transaction.getProcessorResponseCode());
+            System.out.println("Response Text: " + transaction.getProcessorResponseText());
+        }
+
+        
+			return result.isSuccess()+ "!222";
+   
+        });
+        
+        
 
     get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
