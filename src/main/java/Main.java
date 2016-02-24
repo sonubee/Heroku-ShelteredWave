@@ -17,6 +17,7 @@ import com.braintreegateway.Result;
 import com.braintreegateway.Transaction;
 import com.braintreegateway.TransactionRequest;
 import com.braintreegateway.ValidationErrors;
+import com.braintreegateway.ClientTokenRequest;
 
 import com.heroku.sdk.jdbc.DatabaseUrl;
 
