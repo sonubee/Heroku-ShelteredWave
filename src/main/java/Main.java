@@ -96,8 +96,7 @@ public class Main {
         System.out.println("1");
         String status = "";
         System.out.println("2");
-		
-		result.
+	
 		
 		
         if (result.isSuccess() == true){
