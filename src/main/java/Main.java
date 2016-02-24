@@ -29,10 +29,10 @@ public class Main {
 	public static String token;
     
  	private static BraintreeGateway gateway = new BraintreeGateway(
-			  Environment.PRODUCTION,
-			  "69ppkf6h8fqh9cxb",
-			  "svp64bn3p56344yj",
-			  "fa458ae542e48d150ed2d456d28f16b7"
+			  Environment.SANDBOX,
+			  "9j46c9m8t3mjfwwq",
+			  "9fhk7sty57gz2fmx",
+			  "edbf53fbe7189a0a7412e9e86b23575b"
 			);
    
 
@@ -76,7 +76,7 @@ public class Main {
         	return nonce;
         });
         
-        post("/checkout", (req, res) -> {
+               post("/checkout", (req, res) -> {
         	
         	String nonce = req.queryParams("payment_method_nonce");
         	
@@ -91,43 +91,41 @@ public class Main {
               .done();
        
         	System.out.println("After transaction");
-			Result<Transaction> result = gateway.transaction().sale(request);
-			
-			System.out.println("1");
-			String status = "";
-			System.out.println("2");
-		
-			
-			
-			if (result.isSuccess() == true){
-				System.out.println("Success ");
-				Transaction transaction = result.getTarget();
-				transaction.getStatus();
-				System.out.println("Status: " + transaction.getStatus());
-			}
-			System.out.println("3");
-			if (result.isSuccess() == false)
-			{
-				
-				System.out.println("Fail");
-				Transaction transaction = result.getTransaction();
-/*
-				transaction.getStatus();
-				// Transaction.Status.PROCESSOR_DECLINED
+        	
+        Result<Transaction> result = gateway.transaction().sale(request);
+        
+        System.out.println("1");
+        String status = "";
+        System.out.println("2");
+        if (result.isSuccess() == true){
+        	System.out.println("Success ");
+        	Transaction transaction = result.getTarget();
+        	transaction.getStatus();
+        	System.out.println("Status: " + transaction.getStatus());
+        }
+        System.out.println("3");
+        if (result.isSuccess() == false)
+        {
+        	System.out.println("Fail");
+        	System.out.println("4");
+            Transaction transaction = result.getTransaction();
+            System.out.println("5");
+            transaction.getStatus();
+            // Transaction.Status.PROCESSOR_DECLINED
+            System.out.println("6");
+            transaction.getProcessorResponseCode();
+            // e.g. "2001"
 
-				transaction.getProcessorResponseCode();
-				// e.g. "2001"
+            transaction.getProcessorResponseText();
+            // e.g. "Insufficient Funds"
+            System.out.println("Status: " + transaction.getStatus());
+            System.out.println("Response Code: " + transaction.getProcessorResponseCode());
+            System.out.println("Response Text: " + transaction.getProcessorResponseText());
+            
+        }
 
-				transaction.getProcessorResponseText();
-				// e.g. "Insufficient Funds"
-				System.out.println("Status: " + transaction.getStatus());
-				System.out.println("Response Code: " + transaction.getProcessorResponseCode());
-				System.out.println("Response Text: " + transaction.getProcessorResponseText());
-				*/
-			}
-
-			System.out.println("4");
-				return result.isSuccess()+ "!222";
+        System.out.println("7");
+			return result.isSuccess()+ "!222";
    
         });
         
