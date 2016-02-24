@@ -167,6 +167,13 @@ public class Main {
         if (connection != null) try{connection.close();} catch(SQLException e){}
       }
     }, new FreeMarkerEngine());
+	
+	   
+        before ((request, response) -> {
+        	System.out.println("Request IP: " + request.ip());
+        	System.out.println("Request Verb: " + request.requestMethod());
+        	System.out.println("Request Agent: " + request.userAgent());
+        });
 
   }
 
