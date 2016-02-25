@@ -29,11 +29,11 @@ public class Main {
 	public static String token;
     
  	private static BraintreeGateway gateway = new BraintreeGateway(
-  Environment.SANDBOX,
-  "9j46c9m8t3mjfwwq",
-  "9fhk7sty57gz2fmx",
-  "edbf53fbe7189a0a7412e9e86b23575b"
-);
+			  Environment.PRODUCTION,
+			  "69ppkf6h8fqh9cxb",
+			  "svp64bn3p56344yj",
+			  "fa458ae542e48d150ed2d456d28f16b7"
+			);
    
 
   public static void main(String[] args) {
@@ -85,6 +85,9 @@ public class Main {
         	TransactionRequest request = new TransactionRequest()
             .amount(new BigDecimal("1.00"))
             .paymentMethodNonce(nonce)
+			   .customer()
+              .email("gsbllc2011@gmail.com")
+        	  .done()
             //.merchantAccountId("JobsME_marketplace")
             .options()
               .submitForSettlement(true)
