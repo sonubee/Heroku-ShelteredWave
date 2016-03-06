@@ -34,16 +34,6 @@ public class Main {
   "svp64bn3p56344yj",
   "fa458ae542e48d150ed2d456d28f16b7"
 
-
-	/*
-	BraintreeGateway gateway = new BraintreeGateway(
-  Environment.SANDBOX,
-  "9j46c9m8t3mjfwwq",
-  "9fhk7sty57gz2fmx",
-  "edbf53fbe7189a0a7412e9e86b23575b"
-);
-   */
-
   public static void main(String[] args) {
 	
     port(Integer.valueOf(System.getenv("PORT")));
@@ -80,20 +70,17 @@ public class Main {
         
         post("/checkout2", (req, res) -> {
         	String nonce = req.queryParams("payment_method_nonce");
-        	System.out.println("Nonce: " + nonce);
-        	return nonce;
-        });
-        
-        post("/checkout", (req, res) -> {
-        	
-        	String nonce = req.queryParams("payment_method_nonce");
         	String email = req.queryParams("email");
+			String amount = req.queryParams("amount");
+			
+			Double amountDouble = Double.valueOf(amount);
         	
         	System.out.println("Nonce: " + nonce);
         	System.out.println("Email: " + email);
+			System.out.println("Amount: " + amountDouble);
         	
         	TransactionRequest request = new TransactionRequest()
-            .amount(new BigDecimal("5.00"))
+            .amount(new BigDecimal(amount))
             .paymentMethodNonce(nonce)
             .customer()
               .email(email)
@@ -106,6 +93,8 @@ public class Main {
         	System.out.println("After transaction");
         	
         Result<Transaction> result = gateway.transaction().sale(request);
+		
+		
         
         System.out.println("1");
         String status = "";
@@ -123,7 +112,7 @@ public class Main {
         	System.out.println("4");
             Transaction transaction = result.getTransaction();
             System.out.println("5");
-            transaction.getStatus();
+            //transaction.getStatus();
             // Transaction.Status.PROCESSOR_DECLINED
             System.out.println("6");
             transaction.getProcessorResponseCode();
