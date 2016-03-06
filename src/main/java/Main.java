@@ -32,7 +32,7 @@ public class Main {
   Environment.PRODUCTION,
   "69ppkf6h8fqh9cxb",
   "svp64bn3p56344yj",
-  "fa458ae542e48d150ed2d456d28f16b7"
+  "fa458ae542e48d150ed2d456d28f16b7");
 
   public static void main(String[] args) {
 	
