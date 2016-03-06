@@ -70,6 +70,13 @@ public class Main {
         
         post("/checkout2", (req, res) -> {
         	String nonce = req.queryParams("payment_method_nonce");
+        	System.out.println("Nonce: " + nonce);
+        	return nonce;
+        });
+        
+         post("/checkout", (req, res) -> {
+        	
+        	String nonce = req.queryParams("payment_method_nonce");
         	String email = req.queryParams("email");
 			String amount = req.queryParams("amount");
 			
