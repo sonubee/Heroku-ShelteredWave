@@ -87,7 +87,7 @@ public class Main {
 			System.out.println("Amount: " + amountDouble);
         	
         	TransactionRequest request = new TransactionRequest()
-            .amount(new BigDecimal(amount))
+            .amount(new BigDecimal(1))
             .paymentMethodNonce(nonce)
             .customer()
               .email(email)
