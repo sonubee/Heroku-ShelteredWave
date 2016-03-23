@@ -80,7 +80,7 @@ public class Main {
 		System.out.println("Token: " + token);
 		System.out.println("UDID: " + UDID);
 		return token;
-	}
+	});
         
          post("/checkout", (req, res) -> {
         	
