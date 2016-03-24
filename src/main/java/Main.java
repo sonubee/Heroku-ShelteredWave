@@ -146,11 +146,68 @@ public class Main {
    
         });
 		
+				post("/sendPush", (req, res) -> {
+			System.out.println("-----------------------2");
+			String to = req.queryParams("to");
+			String json = req.queryParams("jsonString");
+			
+			
+	       	
+			System.out.println("To: " + to);
+			System.out.println("json: " + json);
+			
+	     try {
+	            // Prepare JSON containing the GCM message content. What to send and where to send.
+	            JSONObject jGcmData = new JSONObject();
+	            JSONObject jData = new JSONObject();
+	            jData.put("message", json);
+	            // Where to send GCM message.
+				
+				JSONObject entireMessage = new JSONObject();
+				JSONArray regIds = new JSONArray();
+				regIds.put(to);
+				
+	            //jGcmData.put("to", "/topics/global");
+				jGcmData.put("to", to);
+	            
+	            // What to send in GCM message.
+	            jGcmData.put("data", jData);
+				
+				
+				JSONObject message2 = new JSONObject();
+				message2.put("message", json);
+				jGcmData.put("registration_ids", regIds);
+				jGcmData.put("data", message2);
+				
+	            // Create connection to send GCM Message request.
+	            //URL url = new URL("https://android.googleapis.com/gcm/send");
+				URL url = new URL("https://pushy.me/push?api_key=144f5ee08d5c0ead05247a144a916e9d035aec539fb4a9779beef8bb2ed79721");
+	            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+	            //conn.setRequestProperty("Authorization", "key=" + API_KEY);
+	            conn.setRequestProperty("Content-Type", "application/json");
+	            conn.setRequestMethod("POST");
+	            conn.setDoOutput(true);
 
+	            // Send GCM message content.
+	            OutputStream outputStream = conn.getOutputStream();
+	            outputStream.write(jGcmData.toString().getBytes());
+
+	            // Read GCM response.
+	            InputStream inputStream = conn.getInputStream();
+	            String resp = IOUtils.toString(inputStream);
+	            System.out.println(resp);
+	            System.out.println("Check your device/emulator for notification or logcat for " +
+	                    "confirmation of the receipt of the GCM message.");
+	        } catch (IOException e) {
+	            System.out.println("Unable to send GCM message.");
+	            System.out.println("Please ensure that API_KEY has been replaced by the server " +
+	                    "API key, and that the device's registration token is correct (if specified).");
+	            e.printStackTrace();
+	        }
+	       
+	       	return json;
+		});
 		
-		
-        
-        
 
     get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
