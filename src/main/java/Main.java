@@ -1,3 +1,5 @@
+package ravore3;
+
 import java.sql.*;
 import java.util.HashMap;
 import java.util.ArrayList;
@@ -32,69 +34,30 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
-
-
-public class Main {
+public class MainActivity {
 	
-	public static int i=0;
+	private static BraintreeGateway gateway = new BraintreeGateway(
+			  Environment.SANDBOX,
+			  "9j46c9m8t3mjfwwq",
+			  "9fhk7sty57gz2fmx",
+			  "edbf53fbe7189a0a7412e9e86b23575b"
+			);
 	
-	public static String token;
-    
- 	private static BraintreeGateway gateway = new BraintreeGateway(
-  Environment.PRODUCTION,
-  "69ppkf6h8fqh9cxb",
-  "svp64bn3p56344yj",
-  "fa458ae542e48d150ed2d456d28f16b7");
-
-  public static void main(String[] args) {
-	
-    port(Integer.valueOf(System.getenv("PORT")));
-    staticFileLocation("/public");
-
-  	get("/hello", (request, response) ->{
-       	return "Hello World!";
-       });
-        
-    get("/client_token", (request, response) ->{
-       	return "eyJ2ZXJzaW9uIjoyLCJhdXRob3JpemF0aW9uRmluZ2VycHJpbnQiOiIzN2Y4Zjg2ZWFhMjQxZWNjZGQ4MTg4ODFkNWQ5ZTUyNzlmNTg4OGEyNmM5MGM1N2QzMDc2ZmQzNDIxY2YwZGNlfGNyZWF0ZWRfYXQ9MjAxNi0wMi0yMFQyMzoxNDowNC4zMDgyMzkxNzUrMDAwMFx1MDAyNm1lcmNoYW50X2lkPTM0OHBrOWNnZjNiZ3l3MmJcdTAwMjZwdWJsaWNfa2V5PTJuMjQ3ZHY4OWJxOXZtcHIiLCJjb25maWdVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvMzQ4cGs5Y2dmM2JneXcyYi9jbGllbnRfYXBpL3YxL2NvbmZpZ3VyYXRpb24iLCJjaGFsbGVuZ2VzIjpbXSwiZW52aXJvbm1lbnQiOiJzYW5kYm94IiwiY2xpZW50QXBpVXJsIjoiaHR0cHM6Ly9hcGkuc2FuZGJveC5icmFpbnRyZWVnYXRld2F5LmNvbTo0NDMvbWVyY2hhbnRzLzM0OHBrOWNnZjNiZ3l3MmIvY2xpZW50X2FwaSIsImFzc2V0c1VybCI6Imh0dHBzOi8vYXNzZXRzLmJyYWludHJlZWdhdGV3YXkuY29tIiwiYXV0aFVybCI6Imh0dHBzOi8vYXV0aC52ZW5tby5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIiwiYW5hbHl0aWNzIjp7InVybCI6Imh0dHBzOi8vY2xpZW50LWFuYWx5dGljcy5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tIn0sInRocmVlRFNlY3VyZUVuYWJsZWQiOnRydWUsInRocmVlRFNlY3VyZSI6eyJsb29rdXBVcmwiOiJodHRwczovL2FwaS5zYW5kYm94LmJyYWludHJlZWdhdGV3YXkuY29tOjQ0My9tZXJjaGFudHMvMzQ4cGs5Y2dmM2JneXcyYi90aHJlZV9kX3NlY3VyZS9sb29rdXAifSwicGF5cGFsRW5hYmxlZCI6dHJ1ZSwicGF5cGFsIjp7ImRpc3BsYXlOYW1lIjoiQWNtZSBXaWRnZXRzLCBMdGQuIChTYW5kYm94KSIsImNsaWVudElkIjpudWxsLCJwcml2YWN5VXJsIjoiaHR0cDovL2V4YW1wbGUuY29tL3BwIiwidXNlckFncmVlbWVudFVybCI6Imh0dHA6Ly9leGFtcGxlLmNvbS90b3MiLCJiYXNlVXJsIjoiaHR0cHM6Ly9hc3NldHMuYnJhaW50cmVlZ2F0ZXdheS5jb20iLCJhc3NldHNVcmwiOiJodHRwczovL2NoZWNrb3V0LnBheXBhbC5jb20iLCJkaXJlY3RCYXNlVXJsIjpudWxsLCJhbGxvd0h0dHAiOnRydWUsImVudmlyb25tZW50Tm9OZXR3b3JrIjp0cnVlLCJlbnZpcm9ubWVudCI6Im9mZmxpbmUiLCJ1bnZldHRlZE1lcmNoYW50IjpmYWxzZSwiYnJhaW50cmVlQ2xpZW50SWQiOiJtYXN0ZXJjbGllbnQzIiwiYmlsbGluZ0FncmVlbWVudHNFbmFibGVkIjp0cnVlLCJtZXJjaGFudEFjY291bnRJZCI6ImFjbWV3aWRnZXRzbHRkc2FuZGJveCIsImN1cnJlbmN5SXNvQ29kZSI6IlVTRCJ9LCJjb2luYmFzZUVuYWJsZWQiOmZhbHNlLCJtZXJjaGFudElkIjoiMzQ4cGs5Y2dmM2JneXcyYiIsInZlbm1vIjoib2ZmIn0=";
-        
-    });
-        
-        get("/client_token_real", (request, response) ->{
-        	return "production_x75kb8hy_69ppkf6h8fqh9cxb";
-        });
-        
-        get("/client_token_test", (request, response) ->{
-        	
-        	ClientTokenRequest clientTokenRequest = new ClientTokenRequest()
-            .customerId("27073348");
-        	
-        	String clientToken = gateway.clientToken().generate(clientTokenRequest);
-        	System.out.println("Client Token: " + clientToken);
-        	
-        	Random r = new Random();
-        	int i1 = r.nextInt(1000 - 100) + 100;
-        	i++;
-        	
-        	//return "Random Number: " + i1 + " & Request Number: " + i;
-        	return clientToken;
-        });
-        
-        post("/checkout2", (req, res) -> {
-        	String nonce = req.queryParams("payment_method_nonce");
-        	System.out.println("Nonce: " + nonce);
-        	return nonce;
-        });
+	public static void main(String[] args) {
 		
-	post("/postIOSToken" , (req, res) -> {
-		String token = req.queryParams("token");
-		String UDID = req.queryParams("UDID");
-		System.out.println("Token: " + token);
-		System.out.println("UDID: " + UDID);
-		return token;
-	});
-        
-         post("/checkout", (req, res) -> {
+		get("/hello", (request, response) ->{
+	       	return "Hello World!";
+	       });
+	             		
+		post("/postIOSToken" , (req, res) -> {
+			String token = req.queryParams("token");
+			String UDID = req.queryParams("UDID");
+			System.out.println("Token: " + token);
+			System.out.println("UDID: " + UDID);
+			return token;
+		});
+	        
+        post("/checkout", (req, res) -> {
         	
         	String nonce = req.queryParams("payment_method_nonce");
         	String email = req.queryParams("email");
@@ -102,6 +65,7 @@ public class Main {
 			
 			Double amountDouble = Double.valueOf(amount);
         	
+			System.out.println("-----------------------Purchase-----------------------");
         	System.out.println("Nonce: " + nonce);
         	System.out.println("Email: " + email);
 			System.out.println("Amount: " + amountDouble);
@@ -117,79 +81,56 @@ public class Main {
               .submitForSettlement(true)
               .done();
        
-        	System.out.println("After transaction");
+        	Result<Transaction> result = gateway.transaction().sale(request);
         	
-        Result<Transaction> result = gateway.transaction().sale(request);
-		
-		
+        	String status = "";
         
-        System.out.println("1");
-        String status = "";
-        System.out.println("2");
-        if (result.isSuccess() == true){
-        	System.out.println("Success ");
-        	Transaction transaction = result.getTarget();
-        	transaction.getStatus();
-        	System.out.println("Status: " + transaction.getStatus());
-        }
-        System.out.println("3");
-        if (result.isSuccess() == false)
-        {
-        	System.out.println("Fail");
-        	System.out.println("4");
-            Transaction transaction = result.getTransaction();
-            System.out.println("5");
-            //transaction.getStatus();
-            // Transaction.Status.PROCESSOR_DECLINED
-            System.out.println("6");
-            transaction.getProcessorResponseCode();
-            // e.g. "2001"
+        	if (result.isSuccess() == true){
+        		Transaction transaction = result.getTarget();
+        		transaction.getStatus();
+        		System.out.println("***Payment Success --> Status: " + transaction.getStatus() + "***");
+        	}
+       
+        	if (result.isSuccess() == false)
+        	{
+        		System.out.println("***PAYMENT FAILED***");
+	            Transaction transaction = result.getTransaction();
+	            
+	            transaction.getProcessorResponseCode();
+	            // e.g. "2001"
+	            transaction.getProcessorResponseText();
+	            // e.g. "Insufficient Funds"
+	            System.out.println("Status: " + transaction.getStatus());
+	            System.out.println("Response Code: " + transaction.getProcessorResponseCode());
+	            System.out.println("Response Text: " + transaction.getProcessorResponseText());
+        	}
+        	
+        	System.out.println("-----------------------End of Purchase-----------------------");
 
-            transaction.getProcessorResponseText();
-            // e.g. "Insufficient Funds"
-            System.out.println("Status: " + transaction.getStatus());
-            System.out.println("Response Code: " + transaction.getProcessorResponseCode());
-            System.out.println("Response Text: " + transaction.getProcessorResponseText());
-            
-        }
-
-        System.out.println("7");
-			return result.isSuccess()+ "!222";
+    		return result.isSuccess() + ": Payment Success!";
    
         });
-		
-		post("/sendPush", (req, res) -> {
-			System.out.println("-----------------------2");
+        
+        post("/sendPush", (req, res) -> {
+        	System.out.println("///////////////////////Message///////////////////////");
+        	
 			String to = req.queryParams("to");
 			String json = req.queryParams("jsonString");
 			
-			
-	       	
 			System.out.println("To: " + to);
-			System.out.println("json: " + json);
+			System.out.println("JSON: " + json);
 			
 	     try {
 	            // Prepare JSON containing the GCM message content. What to send and where to send.
 	            JSONObject jGcmData = new JSONObject();
-	            JSONObject jData = new JSONObject();
-	            jData.put("message", json);
-	            // Where to send GCM message.
-				
-				JSONObject entireMessage = new JSONObject();
-				JSONArray regIds = new JSONArray();
+	            JSONArray regIds = new JSONArray();
+	            JSONObject jsonMessage = new JSONObject();
+	 
 				regIds.put(to);
-				
-	            //jGcmData.put("to", "/topics/global");
-				jGcmData.put("to", to);
-	            
-	            // What to send in GCM message.
-	            jGcmData.put("data", jData);
-				
-				
-				JSONObject message2 = new JSONObject();
-				message2.put("message", json);
+				jsonMessage.put("message", json);
+	   
 				jGcmData.put("registration_ids", regIds);
-				jGcmData.put("data", message2);
+				jGcmData.put("data", jsonMessage);
 				
 	            // Create connection to send GCM Message request.
 	            //URL url = new URL("https://android.googleapis.com/gcm/send");
@@ -216,12 +157,23 @@ public class Main {
 	                    "API key, and that the device's registration token is correct (if specified).");
 	            e.printStackTrace();
 	        }
-	       
+     		System.out.println("///////////////////////End of Message///////////////////////");	       
 	       	return json;
 		});
-		
-
-    get("/", (request, response) -> {
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        get("/", (request, response) -> {
             Map<String, Object> attributes = new HashMap<>();
             attributes.put("message", "Hello World!");
 
@@ -260,7 +212,5 @@ public class Main {
         	System.out.println("Request Verb: " + request.requestMethod());
         	System.out.println("Request Agent: " + request.userAgent());
         });
-
-  }
-
+	}
 }
