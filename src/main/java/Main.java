@@ -26,12 +26,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class Main {
-	
+	/*
 	private static BraintreeGateway gateway = new BraintreeGateway(
 		Environment.PRODUCTION,
 		"69ppkf6h8fqh9cxb",
 		"svp64bn3p56344yj",
 		"fa458ae542e48d150ed2d456d28f16b7");
+*/
+	private static BraintreeGateway gateway;
+
 
 	public static void main(String[] args) {
 	
@@ -55,8 +58,27 @@ public class Main {
 				String nonce = req.queryParams("payment_method_nonce");
 				String email = req.queryParams("email");
 				String amount = req.queryParams("amount");
+				String devProd = req.queryParams("devProd");
 				
 				Double amountDouble = Double.valueOf(amount);
+				
+				if (devProd.equals("production")){
+					gateway = new BraintreeGateway(
+						Environment.PRODUCTION,
+						"69ppkf6h8fqh9cxb",
+						"svp64bn3p56344yj",
+						"fa458ae542e48d150ed2d456d28f16b7"
+						);	
+				}
+				
+				if (devProd.equals("sandbox")){
+					gateway = new BraintreeGateway(
+					    Environment.SANDBOX,
+				   	    "9j46c9m8t3mjfwwq",
+					    "9fhk7sty57gz2fmx",
+					    "edbf53fbe7189a0a7412e9e86b23575b"
+						);	
+				}
 				
 				System.out.println("-----------------------Purchase-----------------------");
 				System.out.println("Nonce: " + nonce);
