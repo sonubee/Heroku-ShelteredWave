@@ -171,6 +171,8 @@ public class Main {
 						jGcmData.put("registration_ids", regIds);
 						jGcmData.put("data", jsonMessage);
 						
+						System.out.println("Into Android if Section");
+						
 			            // Create connection to send GCM Message request.
 			            //URL url = new URL("https://android.googleapis.com/gcm/send");
 						URL url = new URL("https://pushy.me/push?api_key=144f5ee08d5c0ead05247a144a916e9d035aec539fb4a9779beef8bb2ed79721");
@@ -201,10 +203,13 @@ public class Main {
 					
 					JSONObject jGcmData = new JSONObject();
 					JSONObject notifications = new JSONObject();
+					JSONObject iosChannel = new JSONObject();
 					
 					System.out.println("Message: " + iosMessage);
 					
 					notifications.put("alert", iosMessage);
+					iosChannel.put("ios_channel", iosMessage);
+					
 					
 					jGcmData.put("audience", "all");
 					jGcmData.put("device_types", "all");
