@@ -128,6 +128,7 @@ public class Main {
 		            JSONObject jGcmData = new JSONObject();
 		            JSONArray regIds = new JSONArray();
 		            JSONObject jsonMessage = new JSONObject();
+					String json = req.queryParams("jsonString");
 		 
 					regIds.put(to);
 					jsonMessage.put("message", json);
