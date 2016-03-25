@@ -40,106 +40,90 @@ public class Main {
 	
 		port(Integer.valueOf(System.getenv("PORT")));
 		staticFileLocation("/public");
-
-		get("/hello", (request, response) ->{
-				return "Hello World!";
-			   });
-							
+	get("/hello", (request, response) ->{
+	       	return "Hello World!";
+	       });
+	             		
 		post("/postIOSToken" , (req, res) -> {
-				String token = req.queryParams("token");
-				String UDID = req.queryParams("UDID");
-				System.out.println("Token: " + token);
-				System.out.println("UDID: " + UDID);
-				return token;
-			});
-				
-		post("/checkout", (req, res) -> {
-				
-				String nonce = req.queryParams("payment_method_nonce");
-				String email = req.queryParams("email");
-				String amount = req.queryParams("amount");
-				String devProd = req.queryParams("devProd");
-				
-				Double amountDouble = Double.valueOf(amount);
-				
-				if (devProd.equals("production")){
-					gateway = new BraintreeGateway(
-						Environment.PRODUCTION,
-						"69ppkf6h8fqh9cxb",
-						"svp64bn3p56344yj",
-						"fa458ae542e48d150ed2d456d28f16b7"
-						);	
-				}
-				
-				if (devProd.equals("sandbox")){
-					gateway = new BraintreeGateway(
-					    Environment.SANDBOX,
-				   	    "9j46c9m8t3mjfwwq",
-					    "9fhk7sty57gz2fmx",
-					    "edbf53fbe7189a0a7412e9e86b23575b"
-						);	
-				}
-				
-				System.out.println("-----------------------Purchase-----------------------");
-				System.out.println("Nonce: " + nonce);
-				System.out.println("Email: " + email);
-				System.out.println("Amount: " + amountDouble);
-				
-				TransactionRequest request = new TransactionRequest()
-				.amount(new BigDecimal(amount))
-				.paymentMethodNonce(nonce)
-				.customer()
-				  .email(email)
-				  .done()
-				//.merchantAccountId("JobsME_marketplace")
-				.options()
-				  .submitForSettlement(true)
-				  .done();
-		   
-				Result<Transaction> result = gateway.transaction().sale(request);
-				
-				String status = "";
+			String token = req.queryParams("token");
+			String UDID = req.queryParams("UDID");
+			System.out.println("Token: " + token);
+			System.out.println("UDID: " + UDID);
+			return token;
+		});
+	        
+        post("/checkout", (req, res) -> {
+        	
+        	String nonce = req.queryParams("payment_method_nonce");
+        	String email = req.queryParams("email");
+			String amount = req.queryParams("amount");
 			
-				if (result.isSuccess() == true){
-					Transaction transaction = result.getTarget();
-					transaction.getStatus();
-					System.out.println("***Payment Success --> Status: " + transaction.getStatus() + "***");
-				}
-		   
-				if (result.isSuccess() == false)
-				{
-					System.out.println("***PAYMENT FAILED***");
-					Transaction transaction = result.getTransaction();
-					
-					transaction.getProcessorResponseCode();
-					// e.g. "2001"
-					transaction.getProcessorResponseText();
-					// e.g. "Insufficient Funds"
-					System.out.println("Status: " + transaction.getStatus());
-					System.out.println("Response Code: " + transaction.getProcessorResponseCode());
-					System.out.println("Response Text: " + transaction.getProcessorResponseText());
-				}
-				
-				System.out.println("-----------------------End of Purchase-----------------------");
+			Double amountDouble = Double.valueOf(amount);
+        	
+			System.out.println("-----------------------Purchase-----------------------");
+        	System.out.println("Nonce: " + nonce);
+        	System.out.println("Email: " + email);
+			System.out.println("Amount: " + amountDouble);
+        	
+        	TransactionRequest request = new TransactionRequest()
+            .amount(new BigDecimal(amount))
+            .paymentMethodNonce(nonce)
+            .customer()
+              .email(email)
+        	  .done()
+            //.merchantAccountId("JobsME_marketplace")
+            .options()
+              .submitForSettlement(true)
+              .done();
+       
+        	Result<Transaction> result = gateway.transaction().sale(request);
+        	
+        	String status = "";
+        
+        	if (result.isSuccess() == true){
+        		Transaction transaction = result.getTarget();
+        		transaction.getStatus();
+        		System.out.println("***Payment Success --> Status: " + transaction.getStatus() + "***");
+        	}
+       
+        	if (result.isSuccess() == false)
+        	{
+        		System.out.println("***PAYMENT FAILED***");
+	            Transaction transaction = result.getTransaction();
+	            
+	            transaction.getProcessorResponseCode();
+	            // e.g. "2001"
+	            transaction.getProcessorResponseText();
+	            // e.g. "Insufficient Funds"
+	            System.out.println("Status: " + transaction.getStatus());
+	            System.out.println("Response Code: " + transaction.getProcessorResponseCode());
+	            System.out.println("Response Text: " + transaction.getProcessorResponseText());
+        	}
+        	
+        	System.out.println("-----------------------End of Purchase-----------------------");
 
-				return result.isSuccess() + ": Payment Success!";
-	   
-			});	
+    		return result.isSuccess() + ": Payment Success!";
+   
+        });
+        
+        post("/sendPush", (req, res) -> {
+        	
+        	System.out.println("///////////////////////Message///////////////////////");
+        	
+			String to = req.queryParams("to");
+			String json = req.queryParams("jsonString");
+			String os = req.queryParams("os");
 			
-		post("/sendPush", (req, res) -> {
-				System.out.println("///////////////////////Message///////////////////////");
-				
-				String to = req.queryParams("to");
-				String json = req.queryParams("jsonString");
-				
-				System.out.println("To: " + to);
-				System.out.println("JSON: " + json);
-				
-			 try {
-					// Prepare JSON containing the GCM message content. What to send and where to send.
-					JSONObject jGcmData = new JSONObject();
-					JSONArray regIds = new JSONArray();
-					JSONObject jsonMessage = new JSONObject();
+			System.out.println("To: " + to);
+			System.out.println("JSON: " + json);
+			System.out.println("OS: " + os);
+			
+			if (!(os.equals("android") || os.equals("ios"))){
+				try {
+		            // Prepare JSON containing the GCM message content. What to send and where to send.
+		            JSONObject jGcmData = new JSONObject();
+		            JSONArray regIds = new JSONArray();
+		            JSONObject jsonMessage = new JSONObject();
 		 
 					regIds.put(to);
 					jsonMessage.put("message", json);
@@ -147,43 +131,114 @@ public class Main {
 					jGcmData.put("registration_ids", regIds);
 					jGcmData.put("data", jsonMessage);
 					
-					// Create connection to send GCM Message request.
-					//URL url = new URL("https://android.googleapis.com/gcm/send");
+		            // Create connection to send GCM Message request.
+		            //URL url = new URL("https://android.googleapis.com/gcm/send");
 					URL url = new URL("https://pushy.me/push?api_key=144f5ee08d5c0ead05247a144a916e9d035aec539fb4a9779beef8bb2ed79721");
-					HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-					//conn.setRequestProperty("Authorization", "key=" + API_KEY);
-					conn.setRequestProperty("Content-Type", "application/json");
-					conn.setRequestMethod("POST");
-					conn.setDoOutput(true);
+		            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		            //conn.setRequestProperty("Authorization", "key=" + API_KEY);
+		            conn.setRequestProperty("Content-Type", "application/json");
+		            conn.setRequestMethod("POST");
+		            conn.setDoOutput(true);
 
-					// Send GCM message content.
-					OutputStream outputStream = conn.getOutputStream();
-					outputStream.write(jGcmData.toString().getBytes());
+		            // Send GCM message content.
+		            OutputStream outputStream = conn.getOutputStream();
+		            outputStream.write(jGcmData.toString().getBytes());
 
-					// Read GCM response.
-					InputStream inputStream = conn.getInputStream();
-					String resp = IOUtils.toString(inputStream);
-					System.out.println(resp);
-					System.out.println("Check your device/emulator for notification or logcat for " +
-							"confirmation of the receipt of the GCM message.");
-				} catch (IOException e) {
-					System.out.println("Unable to send GCM message.");
-					System.out.println("Please ensure that API_KEY has been replaced by the server " +
-							"API key, and that the device's registration token is correct (if specified).");
-					e.printStackTrace();
-				}
-				System.out.println("///////////////////////End of Message///////////////////////");	       
-				return json;
-			});
+		            // Read GCM response.
+		            InputStream inputStream = conn.getInputStream();
+		            String resp = IOUtils.toString(inputStream);
+		            System.out.println(resp);
+		            System.out.println("Check your device/emulator for notification or logcat for " +
+		                    "confirmation of the receipt of the GCM message.");
+		        } catch (IOException e) {
+		           e.getMessage();
+		            e.printStackTrace();
+		        }
+			}
 			
-			before ((request, response) -> {
-			System.out.println("Request IP: " + request.ip());
-			System.out.println("Request Verb: " + request.requestMethod());
-			System.out.println("Request Agent: " + request.userAgent());
+			else if (os.equals("android")){
+				  try {
+			            // Prepare JSON containing the GCM message content. What to send and where to send.
+			            JSONObject jGcmData = new JSONObject();
+			            JSONArray regIds = new JSONArray();
+			            JSONObject jsonMessage = new JSONObject();
+			 
+						regIds.put(to);
+						jsonMessage.put("message", json);
+			   
+						jGcmData.put("registration_ids", regIds);
+						jGcmData.put("data", jsonMessage);
+						
+			            // Create connection to send GCM Message request.
+			            //URL url = new URL("https://android.googleapis.com/gcm/send");
+						URL url = new URL("https://pushy.me/push?api_key=144f5ee08d5c0ead05247a144a916e9d035aec539fb4a9779beef8bb2ed79721");
+			            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+			            //conn.setRequestProperty("Authorization", "key=" + API_KEY);
+			            conn.setRequestProperty("Content-Type", "application/json");
+			            conn.setRequestMethod("POST");
+			            conn.setDoOutput(true);
+
+			            // Send GCM message content.
+			            OutputStream outputStream = conn.getOutputStream();
+			            outputStream.write(jGcmData.toString().getBytes());
+
+			            // Read GCM response.
+			            InputStream inputStream = conn.getInputStream();
+			            String resp = IOUtils.toString(inputStream);
+			            System.out.println(resp);
+			            System.out.println("Check your device/emulator for notification or logcat for " +
+			                    "confirmation of the receipt of the GCM message.");
+			        } catch (IOException e) {
+			           e.getMessage();
+			            e.printStackTrace();
+			        }
+			}
+			
+			else if (os.equals("ios")){
+				try {
+					
+					JSONObject jGcmData = new JSONObject();
+					JSONObject notifications = new JSONObject();
+					
+					notifications.put("alert", "A broadcast message");
+					
+					jGcmData.put("audience", "all");
+					jGcmData.put("device_types", "all");
+					jGcmData.put("notification", notifications);
+					
+					URL url = new URL("https://go.urbanairship.com/api/push");
+		            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+		           
+		            String userCredentials = "toDJ-fwhRj211DjZUWL80w:hooZT_vcStG4sWYYurKM5A";
+		            String basicAuth = "Basic " + new String(new Base64().encode(userCredentials.getBytes()));
+		            
+		            //conn.setRequestProperty  ("Authorization", "Basic " + encoding);
+		            conn.setRequestProperty  ("Authorization", basicAuth);
+		            //conn.setRequestProperty("Authorization", "key=" + "hooZT_vcStG4sWYYurKM5A");
+		            conn.setRequestProperty("Accept", "application/vnd.urbanairship+json; version=3");
+		            conn.setRequestProperty("Content-Type", "application/json");
+		            conn.setRequestMethod("POST");
+		            conn.setDoOutput(true);
+		
+		            // Send GCM message content.
+		            OutputStream outputStream = conn.getOutputStream();
+		            outputStream.write(jGcmData.toString().getBytes());
+		
+		            // Read GCM response.
+		            InputStream inputStream = conn.getInputStream();
+		            String resp = IOUtils.toString(inputStream);
+		            System.out.println(resp);
+		            System.out.println("Check your device/emulator for notification or logcat for " +
+		                    "confirmation of the receipt of the GCM message.");
+		        } catch (IOException e) {
+		        	System.out.println("Error: " + e.getMessage());
+		        }
+			}
+			
+	   
+     		System.out.println("///////////////////////End of Message///////////////////////");	       
+	       	return json;
 		});
-			
-			
-			
 			
 			
 			
