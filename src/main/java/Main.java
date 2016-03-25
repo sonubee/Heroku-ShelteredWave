@@ -112,13 +112,15 @@ public class Main {
         	System.out.println("///////////////////////Message///////////////////////");
         	
 			String to = req.queryParams("to");
-			String json = req.queryParams("jsonString");
 			String os = req.queryParams("os");
-			String iosMessage = req.queryParams("iosMessage");
+			String title = req.queryParams("title");
+			String message = req.queryParams("message");
+			String type = req.queryParams("type");
+			String braceletId = req.queryParams("braceletId");
 			
 			System.out.println("To: " + to);
-			System.out.println("JSON: " + json);
 			System.out.println("OS: " + os);
+			System.out.println("Message: " + message);
 			
 			if (!(os.equals("android") || os.equals("ios"))){
 				try {
@@ -158,20 +160,20 @@ public class Main {
 		        }
 			}
 			
-			else if (os.equals("android")){
+			//else 
+				else if (os.equals("android")){
 				  try {
+						System.out.println("In Android Push Section");
 			            // Prepare JSON containing the GCM message content. What to send and where to send.
 			            JSONObject jGcmData = new JSONObject();
 			            JSONArray regIds = new JSONArray();
 			            JSONObject jsonMessage = new JSONObject();
 			 
 						regIds.put(to);
-						jsonMessage.put("message", json);
+						jsonMessage.put("message", message);
 			   
 						jGcmData.put("registration_ids", regIds);
 						jGcmData.put("data", jsonMessage);
-						
-						System.out.println("Into Android if Section");
 						
 			            // Create connection to send GCM Message request.
 			            //URL url = new URL("https://android.googleapis.com/gcm/send");
@@ -200,17 +202,13 @@ public class Main {
 			
 			else if (os.equals("ios")){
 				try {
-					
+					System.out.println("In iOS Push Section");
 					JSONObject jGcmData = new JSONObject();
 					JSONObject notifications = new JSONObject();
 					JSONObject iosChannel = new JSONObject();
 					
-					System.out.println("Message: " + iosMessage);
-					
-					notifications.put("alert", iosMessage);
-					iosChannel.put("ios_channel", iosMessage);
-					
-					
+					notifications.put("alert", message);
+					iosChannel.put("ios_channel", to);
 					jGcmData.put("audience", "all");
 					jGcmData.put("device_types", "all");
 					jGcmData.put("notification", notifications);
@@ -246,7 +244,7 @@ public class Main {
 			
 	   
      		System.out.println("///////////////////////End of Message///////////////////////");	       
-	       	return json;
+	       	return "Attempt Made to Push Server";
 		});
         
 		
