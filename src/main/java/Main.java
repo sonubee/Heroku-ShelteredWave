@@ -202,6 +202,8 @@ public class Main {
 					JSONObject jGcmData = new JSONObject();
 					JSONObject notifications = new JSONObject();
 					
+					System.out.println("Message: " + iosMessage);
+					
 					notifications.put("alert", iosMessage);
 					
 					jGcmData.put("audience", "all");
