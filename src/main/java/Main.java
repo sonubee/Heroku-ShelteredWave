@@ -121,49 +121,22 @@ public class Main {
 			System.out.println("To: " + to);
 			System.out.println("OS: " + os);
 			System.out.println("Message: " + message);
-			
-			if (!(os.equals("android") || os.equals("ios"))){
-				try {
-		            // Prepare JSON containing the GCM message content. What to send and where to send.
-		            JSONObject jGcmData = new JSONObject();
-		            JSONArray regIds = new JSONArray();
-		            JSONObject jsonMessage = new JSONObject();
-					String json = req.queryParams("jsonString");
-		 
-					regIds.put(to);
-					jsonMessage.put("message", json);
-		   
-					jGcmData.put("registration_ids", regIds);
-					jGcmData.put("data", jsonMessage);
-					
-		            // Create connection to send GCM Message request.
-		            //URL url = new URL("https://android.googleapis.com/gcm/send");
-					URL url = new URL("https://pushy.me/push?api_key=144f5ee08d5c0ead05247a144a916e9d035aec539fb4a9779beef8bb2ed79721");
-		            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-		            //conn.setRequestProperty("Authorization", "key=" + API_KEY);
-		            conn.setRequestProperty("Content-Type", "application/json");
-		            conn.setRequestMethod("POST");
-		            conn.setDoOutput(true);
+	
+			if (os.equals("android")){
+				 try {
+					  
+					JSONObject messageDetails = new JSONObject();
 
-		            // Send GCM message content.
-		            OutputStream outputStream = conn.getOutputStream();
-		            outputStream.write(jGcmData.toString().getBytes());
+					try {
+						messageDetails.put("title",title);
+						messageDetails.put("message",message);
+						messageDetails.put("to", receiver);
+						messageDetails.put("type", type);
+						messageDetails.put("braceletId", braceletId);
+					} catch (JSONException e){
 
-		            // Read GCM response.
-		            InputStream inputStream = conn.getInputStream();
-		            String resp = IOUtils.toString(inputStream);
-		            System.out.println(resp);
-		            System.out.println("Check your device/emulator for notification or logcat for " +
-		                    "confirmation of the receipt of the GCM message.");
-		        } catch (IOException e) {
-		           e.getMessage();
-		            e.printStackTrace();
-		        }
-			}
-			
-			//else 
-				else if (os.equals("android")){
-				  try {
+					}
+									  
 						System.out.println("In Android Push Section");
 			            // Prepare JSON containing the GCM message content. What to send and where to send.
 			            JSONObject jGcmData = new JSONObject();
@@ -171,7 +144,7 @@ public class Main {
 			            JSONObject jsonMessage = new JSONObject();
 			 
 						regIds.put(to);
-						jsonMessage.put("message", message);
+						jsonMessage.put("message", messageDetails);
 			   
 						jGcmData.put("registration_ids", regIds);
 						jGcmData.put("data", jsonMessage);
