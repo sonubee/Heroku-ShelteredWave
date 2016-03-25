@@ -183,7 +183,7 @@ public class Main {
 					JSONObject iosChannel = new JSONObject();
 					
 					notifications.put("alert", message);
-					iosChannel.put("ios_channel", to);
+					//iosChannel.put("ios_channel", to);
 					jGcmData.put("audience", "all");
 					jGcmData.put("device_types", "all");
 					jGcmData.put("notification", notifications);
