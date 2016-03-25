@@ -130,7 +130,7 @@ public class Main {
 					try {
 						messageDetails.put("title",title);
 						messageDetails.put("message",message);
-						messageDetails.put("to", receiver);
+						messageDetails.put("to", to);
 						messageDetails.put("type", type);
 						messageDetails.put("braceletId", braceletId);
 					} catch (JSONException e){
