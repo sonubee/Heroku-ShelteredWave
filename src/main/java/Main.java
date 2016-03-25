@@ -41,7 +41,7 @@ public class Main {
 	
 		port(Integer.valueOf(System.getenv("PORT")));
 		staticFileLocation("/public");
-	get("/hello", (request, response) ->{
+				get("/hello", (request, response) ->{
 	       	return "Hello World!";
 	       });
 	             		
@@ -114,6 +114,7 @@ public class Main {
 			String to = req.queryParams("to");
 			String json = req.queryParams("jsonString");
 			String os = req.queryParams("os");
+			String iosMessage = req.queryParams("iosMessage");
 			
 			System.out.println("To: " + to);
 			System.out.println("JSON: " + json);
@@ -201,7 +202,7 @@ public class Main {
 					JSONObject jGcmData = new JSONObject();
 					JSONObject notifications = new JSONObject();
 					
-					notifications.put("alert", "A broadcast message");
+					notifications.put("alert", iosMessage);
 					
 					jGcmData.put("audience", "all");
 					jGcmData.put("device_types", "all");
@@ -240,6 +241,18 @@ public class Main {
      		System.out.println("///////////////////////End of Message///////////////////////");	       
 	       	return json;
 		});
+        
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 			
 			
 			
