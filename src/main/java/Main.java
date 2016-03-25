@@ -18,6 +18,7 @@ import com.heroku.sdk.jdbc.DatabaseUrl;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.json.JSONArray;
+import org.json.JSONException;
 
 import java.io.IOException;
 import java.io.InputStream;
