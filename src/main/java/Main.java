@@ -183,7 +183,7 @@ public class Main {
 					JSONObject iosChannel = new JSONObject();
 					
 					JSONObject namedUser = new JSONObject();
-					namedUser.put("named_user_id",to)
+					namedUser.put("named_user_id",to);
 					
 					notifications.put("alert", message);
 					//iosChannel.put("ios_channel", to);
