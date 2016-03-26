@@ -51,9 +51,9 @@ public class Main {
 			String UDID = req.queryParams("UDID");
 			String deviceToken = req.queryParams("deviceToken");
 			
-			System.out.println("Token: " + token);
+			System.out.println("Channel ID: " + token);
 			System.out.println("UDID: " + UDID);
-			System.out.println("deviceToken: " + deviceToken);
+			System.out.println("Device Token: " + deviceToken);
 			return token;
 		});
 	        
