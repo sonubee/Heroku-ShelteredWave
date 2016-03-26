@@ -180,7 +180,7 @@ public class Main {
 					System.out.println("In iOS Push Section");
 					JSONObject jGcmData = new JSONObject();
 					JSONObject notifications = new JSONObject();
-					JSONObject iosChannel = new JSONObject();
+					//JSONObject iosChannel = new JSONObject();
 					
 					JSONObject iosChannel = new JSONObject();
 					iosChannel.put("ios_channel",to);
