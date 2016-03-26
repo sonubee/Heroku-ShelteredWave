@@ -218,6 +218,8 @@ public class Main {
 		                    "confirmation of the receipt of the GCM message.");
 		        } catch (IOException e) {
 		        	System.out.println("Error: " + e.getMessage());
+					System.out.println("Error Body: " + e.getProcessorResponseText);
+			
 		        }
 			}
 			
