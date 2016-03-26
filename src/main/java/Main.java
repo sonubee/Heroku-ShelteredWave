@@ -189,8 +189,10 @@ public class Main {
 					//iosChannel.put("ios_channel", to);
 					//jGcmData.put("audience", "all");
 					jGcmData.put("audience", iosChannel);
-					jGcmData.put("device_types", "ios");
+					jGcmData.put("device_types", "all");
 					jGcmData.put("notification", notifications);
+					
+					System.out.println(jGcmData.toString());
 					
 					URL url = new URL("https://go.urbanairship.com/api/push");
 		            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
