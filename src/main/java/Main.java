@@ -182,10 +182,14 @@ public class Main {
 					JSONObject notifications = new JSONObject();
 					JSONObject iosChannel = new JSONObject();
 					
+					JSONObject namedUser = new JSONObject();
+					namedUser.put("named_user_id",to)
+					
 					notifications.put("alert", message);
 					//iosChannel.put("ios_channel", to);
-					jGcmData.put("audience", "all");
-					jGcmData.put("device_types", "all");
+					//jGcmData.put("audience", "all");
+					jGcmData.put("audience", namedUser);
+					jGcmData.put("device_types", "ios");
 					jGcmData.put("notification", notifications);
 					
 					URL url = new URL("https://go.urbanairship.com/api/push");
