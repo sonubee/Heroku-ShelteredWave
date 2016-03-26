@@ -35,7 +35,7 @@ public class Main {
 		"svp64bn3p56344yj",
 		"fa458ae542e48d150ed2d456d28f16b7");
 
-	private static BraintreeGateway gateway;
+	//private static BraintreeGateway gateway;
 
 
 	public static void main(String[] args) {
