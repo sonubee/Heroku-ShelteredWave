@@ -28,14 +28,14 @@ import java.net.URL;
 import org.apache.commons.codec.binary.Base64;
 
 public class Main {
-	
+/*	
 	private static BraintreeGateway gateway = new BraintreeGateway(
 		Environment.PRODUCTION,
 		"69ppkf6h8fqh9cxb",
 		"svp64bn3p56344yj",
 		"fa458ae542e48d150ed2d456d28f16b7");
-
-	//private static BraintreeGateway gateway;
+*/
+	private static BraintreeGateway gateway;
 
 
 	public static void main(String[] args) {
@@ -57,59 +57,78 @@ public class Main {
 			return token;
 		});
 	        
-        post("/checkout", (req, res) -> {
-        	
-        	String nonce = req.queryParams("payment_method_nonce");
-        	String email = req.queryParams("email");
-			String amount = req.queryParams("amount");
+        		post("/checkout", (req, res) -> {
+				
+				String nonce = req.queryParams("payment_method_nonce");
+				String email = req.queryParams("email");
+				String amount = req.queryParams("amount");
+				String devProd = req.queryParams("devProd");
+				
+				Double amountDouble = Double.valueOf(amount);
+				
+				if (devProd.equals("production")){
+					gateway = new BraintreeGateway(
+						Environment.PRODUCTION,
+						"69ppkf6h8fqh9cxb",
+						"svp64bn3p56344yj",
+						"fa458ae542e48d150ed2d456d28f16b7"
+						);	
+				}
+				
+				if (devProd.equals("sandbox")){
+					gateway = new BraintreeGateway(
+					    Environment.SANDBOX,
+				   	    "9j46c9m8t3mjfwwq",
+					    "9fhk7sty57gz2fmx",
+					    "edbf53fbe7189a0a7412e9e86b23575b"
+						);	
+				}
+				
+				System.out.println("-----------------------Purchase-----------------------");
+				System.out.println("Nonce: " + nonce);
+				System.out.println("Email: " + email);
+				System.out.println("Amount: " + amountDouble);
+				
+				TransactionRequest request = new TransactionRequest()
+				.amount(new BigDecimal(amount))
+				.paymentMethodNonce(nonce)
+				.customer()
+				  .email(email)
+				  .done()
+				//.merchantAccountId("JobsME_marketplace")
+				.options()
+				  .submitForSettlement(true)
+				  .done();
+		   
+				Result<Transaction> result = gateway.transaction().sale(request);
+				
+				String status = "";
 			
-			Double amountDouble = Double.valueOf(amount);
-        	
-			System.out.println("-----------------------Purchase-----------------------");
-        	System.out.println("Nonce: " + nonce);
-        	System.out.println("Email: " + email);
-			System.out.println("Amount: " + amountDouble);
-        	
-        	TransactionRequest request = new TransactionRequest()
-            .amount(new BigDecimal(amount))
-            .paymentMethodNonce(nonce)
-            .customer()
-              .email(email)
-        	  .done()
-            //.merchantAccountId("JobsME_marketplace")
-            .options()
-              .submitForSettlement(true)
-              .done();
-       
-        	Result<Transaction> result = gateway.transaction().sale(request);
-        	
-        	String status = "";
-        
-        	if (result.isSuccess() == true){
-        		Transaction transaction = result.getTarget();
-        		transaction.getStatus();
-        		System.out.println("***Payment Success --> Status: " + transaction.getStatus() + "***");
-        	}
-       
-        	if (result.isSuccess() == false)
-        	{
-        		System.out.println("***PAYMENT FAILED***");
-	            Transaction transaction = result.getTransaction();
-	            
-	            transaction.getProcessorResponseCode();
-	            // e.g. "2001"
-	            transaction.getProcessorResponseText();
-	            // e.g. "Insufficient Funds"
-	            System.out.println("Status: " + transaction.getStatus());
-	            System.out.println("Response Code: " + transaction.getProcessorResponseCode());
-	            System.out.println("Response Text: " + transaction.getProcessorResponseText());
-        	}
-        	
-        	System.out.println("-----------------------End of Purchase-----------------------");
+				if (result.isSuccess() == true){
+					Transaction transaction = result.getTarget();
+					transaction.getStatus();
+					System.out.println("***Payment Success --> Status: " + transaction.getStatus() + "***");
+				}
+		   
+				if (result.isSuccess() == false)
+				{
+					System.out.println("***PAYMENT FAILED***");
+					Transaction transaction = result.getTransaction();
+					
+					transaction.getProcessorResponseCode();
+					// e.g. "2001"
+					transaction.getProcessorResponseText();
+					// e.g. "Insufficient Funds"
+					System.out.println("Status: " + transaction.getStatus());
+					System.out.println("Response Code: " + transaction.getProcessorResponseCode());
+					System.out.println("Response Text: " + transaction.getProcessorResponseText());
+				}
+				
+				System.out.println("-----------------------End of Purchase-----------------------");
 
-    		return result.isSuccess() + ": Payment Success!";
-   
-        });
+				return result.isSuccess() + ": Payment Success!";
+	   
+			});	
         
         post("/sendPush", (req, res) -> {
         	
