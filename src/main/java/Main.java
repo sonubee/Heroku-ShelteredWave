@@ -49,8 +49,11 @@ public class Main {
 		post("/postIOSToken" , (req, res) -> {
 			String token = req.queryParams("token");
 			String UDID = req.queryParams("UDID");
+			String deviceToken = req.queryParams("deviceToken");
+			
 			System.out.println("Token: " + token);
 			System.out.println("UDID: " + UDID);
+			System.out.println("deviceToken: " + deviceToken);
 			return token;
 		});
 	        
