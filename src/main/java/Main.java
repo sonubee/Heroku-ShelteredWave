@@ -140,6 +140,7 @@ public class Main {
 			String message = req.queryParams("message");
 			String type = req.queryParams("type");
 			String braceletId = req.queryParams("braceletId");
+			String devProd = req.queryParams("devProd");
 			
 			System.out.println("To: " + to);
 			System.out.println("OS: " + os);
@@ -221,8 +222,12 @@ public class Main {
 					URL url = new URL("https://go.urbanairship.com/api/push");
 		            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		           
+				    //Sandbox
 		            //String userCredentials = "toDJ-fwhRj211DjZUWL80w:hooZT_vcStG4sWYYurKM5A";
+					
+					//Production
 					String userCredentials = "eXJUniLXSk2Tm1RZq0qgMQ:8H3dKUwAT1iqKoW9uCvCWg";
+					
 		            String basicAuth = "Basic " + new String(new Base64().encode(userCredentials.getBytes()));
 		            
 		            //conn.setRequestProperty  ("Authorization", "Basic " + encoding);
