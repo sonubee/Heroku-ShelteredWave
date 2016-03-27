@@ -189,8 +189,7 @@ public class Main {
 			            InputStream inputStream = conn.getInputStream();
 			            String resp = IOUtils.toString(inputStream);
 			            System.out.println(resp);
-			            System.out.println("Check your device/emulator for notification or logcat for " +
-			                    "confirmation of the receipt of the GCM message.");
+			       
 			        } catch (IOException e) {
 			           e.getMessage();
 			            e.printStackTrace();
@@ -199,16 +198,19 @@ public class Main {
 			
 			else if (os.equals("ios")){
 				try {
+					
+					String tempJSON = "{\"audience\": {\"device_token\":\"EA9A6A7181A8584EA61A6028B7223F09E1E3DC3906B39ACE991CA18661900E61\"},\"notification\": {\"alert\": \"yo whats up@@\"},\"device_types\": [\"ios\"]}";
+					
 					System.out.println("In iOS Push Section");
 					JSONObject jGcmData = new JSONObject();
 					JSONObject notifications = new JSONObject();
-					//JSONObject iosChannel = new JSONObject();
 					
 					JSONObject iosChannel = new JSONObject();
-					iosChannel.put("ios_channel",to);
+					iosChannel.put("device_token",to);
+					//iosChannel.put("ios_channel", to);
 					
 					notifications.put("alert", message);
-					//iosChannel.put("ios_channel", to);
+				
 					//jGcmData.put("audience", "all");
 					jGcmData.put("audience", iosChannel);
 					jGcmData.put("device_types", "all");
@@ -219,12 +221,13 @@ public class Main {
 					URL url = new URL("https://go.urbanairship.com/api/push");
 		            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
 		           
-		            String userCredentials = "toDJ-fwhRj211DjZUWL80w:hooZT_vcStG4sWYYurKM5A";
+		            //String userCredentials = "toDJ-fwhRj211DjZUWL80w:hooZT_vcStG4sWYYurKM5A";
+					String userCredentials = "eXJUniLXSk2Tm1RZq0qgMQ:8H3dKUwAT1iqKoW9uCvCWg";
 		            String basicAuth = "Basic " + new String(new Base64().encode(userCredentials.getBytes()));
 		            
 		            //conn.setRequestProperty  ("Authorization", "Basic " + encoding);
 		            conn.setRequestProperty  ("Authorization", basicAuth);
-		            //conn.setRequestProperty("Authorization", "key=" + "hooZT_vcStG4sWYYurKM5A");
+		   
 		            conn.setRequestProperty("Accept", "application/vnd.urbanairship+json; version=3");
 		            conn.setRequestProperty("Content-Type", "application/json");
 		            conn.setRequestMethod("POST");
@@ -232,14 +235,14 @@ public class Main {
 		
 		            // Send GCM message content.
 		            OutputStream outputStream = conn.getOutputStream();
-		            outputStream.write(jGcmData.toString().getBytes());
+		            //outputStream.write(jGcmData.toString().getBytes());
+					outputStream.write(jGcmData.toString().getBytes());
 		
 		            // Read GCM response.
 		            InputStream inputStream = conn.getInputStream();
 		            String resp = IOUtils.toString(inputStream);
 		            System.out.println(resp);
-		            System.out.println("Check your device/emulator for notification or logcat for " +
-		                    "confirmation of the receipt of the GCM message.");
+		            
 		        } catch (IOException e) {
 		        	System.out.println("Error: " + e.getMessage());
 					//System.out.println("Error Body: " + e.printStackTrace());
