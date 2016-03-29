@@ -42,7 +42,7 @@ public class Main {
 	
 		port(Integer.valueOf(System.getenv("PORT")));
 		staticFileLocation("/public");
-				get("/hello", (request, response) ->{
+		get("/hello", (request, response) ->{
 	       	return "Hello World!";
 	       });
 	             		
@@ -255,14 +255,63 @@ public class Main {
 		        }
 			}
 			
-	   
      		System.out.println("///////////////////////End of Message///////////////////////");	       
 	       	return "Attempt Made to Push Server";
 		});
-        
-		
-		
-		
+
+		post("/sendEmail", (req, res) -> {
+        	
+        	String type = req.queryParams("type"); //bracelet added or order made
+        	String braceletId = req.queryParams("braceletId");
+        	String os = req.queryParams("os");
+        	String deviceId = req.queryParams("deviceId");
+        	String orderAmount = req.queryParams("orderAmount");
+        	
+        	URL url = new URL("https://api.createsend.com/api/v3.1/transactional/smartemail/eed1daea-68ee-4242-bb90-c7ea6f4e7ffb/send");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            
+            //JSONObject sendThis = new JSONObject("{\"To\": [\"Gurinder Bhangoo <G@JobsMEPlatform.com>\"]}");
+            
+            JSONObject finalObject = new JSONObject();
+            JSONObject braceletId2 = new JSONObject();
+            JSONArray sendTo = new JSONArray();
+            
+            
+            sendTo.put("Gurinder Bhangoo <G@JobsMEPlatform.com>");
+            finalObject.put("To", sendTo);
+      
+            braceletId2.put("braceletId", braceletId);
+            finalObject.put("Data", braceletId2);
+    
+		    //Sandbox
+            //String userCredentials = "toDJ-fwhRj211DjZUWL80w:hooZT_vcStG4sWYYurKM5A";
+			
+			//Production
+			String userCredentials = "967f06c3e197cfc501e0441133ad82f99dd37c7e853bd8c0:.";
+			
+            String basicAuth = "Basic " + new String(new Base64().encode(userCredentials.getBytes()));
+            
+            //conn.setRequestProperty  ("Authorization", "Basic " + encoding);
+            conn.setRequestProperty  ("Authorization", basicAuth);
+   
+          
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setRequestMethod("POST");
+            conn.setDoOutput(true);
+
+            // Send GCM message content.
+            OutputStream outputStream = conn.getOutputStream();
+            //outputStream.write(jGcmData.toString().getBytes());
+			outputStream.write(finalObject.toString().getBytes());
+
+            // Read GCM response.
+            InputStream inputStream = conn.getInputStream();
+            String resp = IOUtils.toString(inputStream);
+            System.out.println(resp);
+       
+        	
+        	return "End of API Request";
+        });
 		
 		
 		
